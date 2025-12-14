@@ -1,24 +1,24 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware # <--- 1. IMPORT THIS
+from fastapi.middleware.cors import CORSMiddleware
 from . import models
 from .database import engine
-from .routers import auth, projects
+from .routers import auth, projects, users # <--- Added users
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Open Collab Hub API")
 
-# 2. ADD THIS MIDDLEWARE BLOCK
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], # Allow Frontend to talk to Backend
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
-    allow_methods=["*"], # Allow all methods (GET, POST, etc.)
-    allow_headers=["*"], # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(auth.router)
 app.include_router(projects.router)
+app.include_router(users.router) # <--- Added this line
 
 @app.get("/")
 def read_root():

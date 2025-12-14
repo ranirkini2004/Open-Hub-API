@@ -70,19 +70,17 @@ export default function Dashboard() {
     }
   };
 
-  // --- NEW: Logout Function ---
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     router.push('/');
   };
-  // ----------------------------
 
   return (
     <div className="min-h-screen bg-gray-50 p-10">
       <div className="max-w-6xl mx-auto">
         
-        {/* Header Section with Logout */}
+        {/* Header Section */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Your Dashboard</h1>
           
@@ -91,10 +89,18 @@ export default function Dashboard() {
               onClick={() => router.push('/feed')}
               className="bg-purple-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-purple-700 transition shadow-md"
             >
-              View Community Feed 🌎
+              Feed 🌎
             </button>
             
-            {/* LOGOUT BUTTON */}
+            {/* --- NEW PROFILE BUTTON --- */}
+            <button 
+              onClick={() => router.push('/profile')}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700 transition shadow-md"
+            >
+              My Profile 👤
+            </button>
+            {/* --------------------------- */}
+
             <button 
               onClick={handleLogout}
               className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold hover:bg-gray-300 transition"
