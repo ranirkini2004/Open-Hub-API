@@ -16,3 +16,15 @@ class ProjectResponse(ProjectCreate):
 
     class Config:
         orm_mode = True
+
+class RequestCreate(BaseModel):
+    project_id: int
+
+class RequestResponse(BaseModel):
+    id: int
+    sender_id: int
+    project_id: int
+    status: str
+
+    class Config:
+        orm_mode = True

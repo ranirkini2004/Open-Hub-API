@@ -36,9 +36,10 @@ class CollabRequest(Base):
     __tablename__ = "collab_requests"
 
     id = Column(Integer, primary_key=True, index=True)
-    role_needed = Column(String) # e.g., "Frontend Dev"
-    is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
+    sender_id = Column(Integer, ForeignKey("users.id"))
     project_id = Column(Integer, ForeignKey("projects.id"))
-    project = relationship("Project", back_populates="collab_requests")
+    status = Column(String, default="pending") # pending, accepted, rejected
+
+    # Relationships (Optional but helpful)
+    sender = relationship("User", foreign_keys=[sender_id])
+    project = relationship("Project", foreign_keys=[project_id])

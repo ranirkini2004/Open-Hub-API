@@ -1,7 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from .. import database, models, config
-import httpx # Like 'requests' but async
+import httpx
+
+# --- ADD THIS LINE ---
+from fastapi.responses import RedirectResponse 
+# ---------------------
 
 router = APIRouter(
     prefix="/auth",
@@ -10,12 +15,8 @@ router = APIRouter(
 
 @router.get("/login")
 def login_github():
-    """
-    Redirects the user to GitHub's OAuth page.
-    """
-    return {
-        "url": f"https://github.com/login/oauth/authorize?client_id={config.settings.GITHUB_CLIENT_ID}&scope=read:user"
-    }
+    url = f"https://github.com/login/oauth/authorize?client_id={config.settings.GITHUB_CLIENT_ID}&scope=read:user"
+    return RedirectResponse(url)
 
 @router.get("/callback")
 async def github_callback(code: str, db: Session = Depends(database.get_db)):
@@ -55,7 +56,10 @@ async def github_callback(code: str, db: Session = Depends(database.get_db)):
     # 3. Check if user exists in DB, if not create them
     existing_user = db.query(models.User).filter(models.User.github_id == str(github_user["id"])).first()
 
-    if not existing_user:
+    user = existing_user
+    
+    # 2. If user doesn't exist, create them
+    if not user:
         new_user = models.User(
             github_id=str(github_user["id"]),
             username=github_user["login"],
@@ -65,7 +69,10 @@ async def github_callback(code: str, db: Session = Depends(database.get_db)):
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
-        return {"message": "User Created", "user": new_user, "access_token": access_token}
+        user = new_user # Set 'user' to the new one
+
+    # 3. UNIFIED REDIRECT (This runs for EVERYONE)
+    # This sends the token and username back to your Next.js frontend
+    frontend_url = "http://localhost:3000/auth/success"
+    return RedirectResponse(url=f"{frontend_url}?token={access_token}&username={user.username}")
     
-    # ### LOOK HERE: I added "access_token": access_token here too ###
-    return {"message": "User Logged In", "user": existing_user, "access_token": access_token}
