@@ -1,0 +1,17 @@
+# Python stuff to ignore
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+
+# Database (don't push your local test DB)
+*.db
+*.sqlite3
+
+# Frontend stuff (for later)
+node_modules/
+.next/
+build/
+dist/
+.DS_Store
