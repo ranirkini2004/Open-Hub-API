@@ -24,7 +24,7 @@ def update_my_profile(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    # Update all fields
+    # Update Standard Fields
     if profile_data.bio is not None:
         user.bio = profile_data.bio
     if profile_data.skills is not None:
@@ -32,14 +32,15 @@ def update_my_profile(
     if profile_data.linkedin is not None:
         user.linkedin = profile_data.linkedin
         
-    # --- NEW FIELDS ---
+    # Update Personal Details
     if profile_data.full_name is not None:
         user.full_name = profile_data.full_name
     if profile_data.department is not None:
         user.department = profile_data.department
     if profile_data.year is not None:
         user.year = profile_data.year
-    # ------------------
+    if profile_data.discord_handle is not None: # <--- NEW
+        user.discord_handle = profile_data.discord_handle
         
     db.commit()
     db.refresh(user)

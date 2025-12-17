@@ -10,7 +10,7 @@ app = FastAPI(title="Open Collab Hub API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],  # <--- CHANGE THIS TO "*"
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

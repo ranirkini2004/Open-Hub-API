@@ -16,15 +16,16 @@ class User(Base):
     skills = Column(String, nullable=True)
     linkedin = Column(String, nullable=True)
     
-    # --- NEW PERSONAL DETAILS ---
-    full_name = Column(String, nullable=True)   # e.g. "Rani Kini"
-    department = Column(String, nullable=True)  # e.g. "CSE"
-    year = Column(String, nullable=True)        # e.g. "3rd Year"
-    # ----------------------------
+    # --- PERSONAL DETAILS ---
+    full_name = Column(String, nullable=True)
+    department = Column(String, nullable=True)
+    year = Column(String, nullable=True)
+    discord_handle = Column(String, nullable=True) # <--- NEW
+    # ----------------------
 
 class Project(Base):
     __tablename__ = "projects"
-    # ... (Keep the rest of the file exactly the same) ...
+
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     description = Column(String)
@@ -37,7 +38,7 @@ class Project(Base):
 
 class CollabRequest(Base):
     __tablename__ = "collab_requests"
-    # ... (Keep the rest of the file exactly the same) ...
+
     id = Column(Integer, primary_key=True, index=True)
     sender_id = Column(Integer, ForeignKey("users.id"))
     project_id = Column(Integer, ForeignKey("projects.id"))

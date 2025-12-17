@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
-# ... (Keep UserBase, ProjectBase, ProjectCreate, ProjectResponse, RequestCreate, RequestResponse AS IS) ...
+# --- EXISTING SCHEMAS ---
 class UserBase(BaseModel):
     username: str
     avatar_url: Optional[str] = None
@@ -34,7 +34,7 @@ class RequestResponse(BaseModel):
     class Config:
         orm_mode = True
 
-# --- UPDATE THESE TWO CLASSES ---
+# --- UPDATED PROFILE SCHEMAS ---
 class UserUpdate(BaseModel):
     bio: Optional[str] = None
     skills: Optional[str] = None
@@ -42,6 +42,7 @@ class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     department: Optional[str] = None
     year: Optional[str] = None
+    discord_handle: Optional[str] = None # <--- NEW
 
 class UserProfileResponse(BaseModel):
     username: str
@@ -52,6 +53,11 @@ class UserProfileResponse(BaseModel):
     full_name: Optional[str] = None
     department: Optional[str] = None
     year: Optional[str] = None
+    discord_handle: Optional[str] = None # <--- NEW
     
     class Config:
         orm_mode = True
+
+# Response for a single project details page
+class ProjectDetailResponse(ProjectResponse):
+    team: List[UserBase] # List of accepted members
