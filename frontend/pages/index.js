@@ -17,7 +17,7 @@ export default function Home() {
   // ---------------------------------------
 
   const handleLogin = () => {
-    window.location.href = 'http://127.0.0.1:8000/auth/login';
+    window.location.href = 'https://open-hub-api-1.onrender.com/auth/login';
   };
 
   return (

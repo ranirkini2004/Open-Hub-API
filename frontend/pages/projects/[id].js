@@ -12,7 +12,7 @@ export default function ProjectDetails() {
   useEffect(() => {
     if (!id) return;
 
-    axios.get(`http://127.0.0.1:8000/projects/${id}`)
+    axios.get(`https://open-hub-api-1.onrender.com/projects/${id}`)
       .then(res => {
         setProject(res.data);
         setLoading(false);

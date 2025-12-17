@@ -31,7 +31,7 @@ export default function Profile() {
     const targetUsername = view_user || loggedInUser;
     setIsOwnProfile(targetUsername === loggedInUser);
 
-    axios.get(`http://127.0.0.1:8000/users/${targetUsername}`)
+    axios.get(`https://open-hub-api-1.onrender.com/users/${targetUsername}`)
       .then(res => {
         setUser(res.data);
         setBio(res.data.bio || '');
@@ -51,7 +51,7 @@ export default function Profile() {
 
     try {
       await axios.put(
-        `http://127.0.0.1:8000/users/profile/me?username=${username}`,
+        `https://open-hub-api-1.onrender.com/users/profile/me?username=${username}`,
         { 
           bio, 
           skills, 
