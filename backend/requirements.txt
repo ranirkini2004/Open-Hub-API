@@ -7,3 +7,5 @@ httpx
 requests
 psycopg2-binary
 fastapi-mail
+passlib[bcrypt]
+python-jose[cryptography]
