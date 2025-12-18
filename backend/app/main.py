@@ -8,12 +8,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Open Collab Hub API")
 
-origins = [
-    "http://localhost:3000",                   # Local React
-    "http://127.0.0.1:3000",                   # Local React Alternate
-    "https://open-hub-api.vercel.app",         # 🟢 YOUR VERCEL FRONTEND
-    "https://open-hub-api.vercel.app/"         # (Optional: with slash)
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
