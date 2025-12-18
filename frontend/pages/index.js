@@ -1,44 +1,81 @@
-import { useEffect } from 'react';
-import Head from 'next/head';
+import { useState } from 'react';
+import axios from 'axios';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-export default function Home() {
+export default function Login() {
   const router = useRouter();
+  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [loading, setLoading] = useState(false);
 
-  // --- NEW: Check for existing session ---
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    // If a token exists, the user is already logged in. 
-    // Send them straight to the dashboard.
-    if (token) {
-      router.push('/dashboard');
+  // Use the environment variable for the API URL
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      // Use URLSearchParams for OAuth2 form data
+      const params = new URLSearchParams();
+      params.append('username', formData.username);
+      params.append('password', formData.password);
+
+      const res = await axios.post(`${API_URL}/token`, params);
+      
+      localStorage.setItem('token', res.data.access_token);
+      localStorage.setItem('username', formData.username);
+      
+      alert("✅ Login Successful!");
+      router.push('/dashboard'); // Go to Dashboard after login
+    } catch (err) {
+      alert("❌ Login Failed. Check username/password.");
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-  }, []);
-  // ---------------------------------------
-
-  const handleLogin = () => {
-    window.location.href = 'https://open-hub-api-1.onrender.com/auth/login';
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
-      <Head>
-        <title>Open Collab Hub</title>
-      </Head>
-
-      <div className="bg-white p-10 rounded-2xl shadow-xl text-center max-w-lg">
-        <h1 className="text-4xl font-extrabold text-blue-600 mb-6">Open Collab Hub</h1>
-        <p className="text-gray-600 mb-8 text-lg">
-          Connect with developers in your college. <br/>
-          Find teammates, share projects, and build your resume.
-        </p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-2 text-center">Welcome Back</h1>
+        <p className="text-gray-500 text-center mb-8">Sign in to OpenCollab</p>
         
-        <button 
-          onClick={handleLogin}
-          className="w-full bg-gray-900 text-white px-6 py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition shadow-lg transform hover:-translate-y-1"
-        >
-          Login with GitHub
-        </button>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Username</label>
+            <input 
+              type="text" 
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+              placeholder="Enter your username"
+              onChange={(e) => setFormData({...formData, username: e.target.value})}
+              required 
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Password</label>
+            <input 
+              type="password" 
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+              placeholder="••••••••"
+              onChange={(e) => setFormData({...formData, password: e.target.value})}
+              required 
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="w-full bg-gray-900 text-white py-3 rounded-xl font-bold hover:bg-black transition shadow-lg disabled:opacity-50"
+          >
+            {loading ? "Signing in..." : "Login to Dashboard"}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center">
+            <p className="text-gray-500">New here? <span className="text-blue-600 font-bold cursor-pointer">Register (Coming Soon)</span></p>
+        </div>
       </div>
     </div>
   );
