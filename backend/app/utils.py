@@ -4,8 +4,8 @@ from jose import jwt
 from typing import Union
 import os
 
-# Password Hashing Configuration
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Change "bcrypt" to "argon2"
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 # JWT Configuration (Read from Render Environment, or use defaults for local)
 SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey")
