@@ -20,10 +20,10 @@ export default function Dashboard() {
       try {
         const headers = { 'Authorization': `Bearer ${token}` };
         const [repos, reqs, joined, owned] = await Promise.all([
-            axios.get(`https://open-hub-api-1.onrender.com/projects/github/repos?username=${username}`, { headers: { 'access-token': token } }),
-            axios.get(`https://open-hub-api-1.onrender.com/projects/requests/pending?username=${username}`, { headers }),
-            axios.get(`https://open-hub-api-1.onrender.com/projects/joined?username=${username}`, { headers }),
-            axios.get(`https://open-hub-api-1.onrender.com/projects/owned?username=${username}`, { headers })
+            axios.get(`http://127.0.0.1:8000/projects/github/repos?username=${username}`, { headers: { 'access-token': token } }),
+            axios.get(`http://127.0.0.1:8000/projects/requests/pending?username=${username}`, { headers }),
+            axios.get(`http://127.0.0.1:8000/projects/joined?username=${username}`, { headers }),
+            axios.get(`http://127.0.0.1:8000/projects/owned?username=${username}`, { headers })
         ]);
         setData({ repos: repos.data, requests: reqs.data, joined: joined.data, owned: owned.data });
         
@@ -39,7 +39,7 @@ export default function Dashboard() {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
     try {
-        const res = await axios.post(`https://open-hub-api-1.onrender.com/projects/?username=${username}`, repo, { headers: { 'Authorization': `Bearer ${token}` } });
+        const res = await axios.post(`http://127.0.0.1:8000/projects/?username=${username}`, repo, { headers: { 'Authorization': `Bearer ${token}` } });
         alert(`✅ Imported ${repo.title}`);
         setData(prev => ({ ...prev, owned: [...prev.owned, res.data] }));
         setActiveTab('lead'); // Switch to lead tab to show new project
@@ -50,12 +50,12 @@ export default function Dashboard() {
     if(!confirm("Are you sure?")) return;
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
-    await axios.delete(`https://open-hub-api-1.onrender.com/projects/${id}?username=${username}`, { headers: { 'Authorization': `Bearer ${token}` } });
+    await axios.delete(`http://127.0.0.1:8000/projects/${id}?username=${username}`, { headers: { 'Authorization': `Bearer ${token}` } });
     setData(prev => ({ ...prev, owned: prev.owned.filter(p => p.id !== id) }));
   };
 
   const handleRequest = async (id, status, repoUrl) => {
-    await axios.put(`https://open-hub-api-1.onrender.com/projects/requests/${id}`, { status });
+    await axios.put(`http://127.0.0.1:8000/projects/requests/${id}`, { status });
     setData(prev => ({ ...prev, requests: prev.requests.filter(r => r.id !== id) }));
     if(status === 'accepted') window.open(`${repoUrl}/settings/access`, '_blank');
   };

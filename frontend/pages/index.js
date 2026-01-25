@@ -13,7 +13,10 @@ export default function Login() {
         alert("Setup Error: Missing NEXT_PUBLIC_GITHUB_CLIENT_ID in Vercel settings.");
         return;
     }
+
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=user:email`;
+
+
   };
 
   return (

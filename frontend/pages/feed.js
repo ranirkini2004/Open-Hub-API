@@ -19,7 +19,7 @@ export default function Feed() {
   const fetchProjects = async (searchTerm = '') => {
     try {
       // This endpoint returns ALL projects (Universal)
-      const res = await axios.get(`https://open-hub-api-1.onrender.com/projects/?search=${searchTerm}`);
+      const res = await axios.get(`http://127.0.0.1:8000/projects/?search=${searchTerm}`);
       setProjects(res.data);
       setLoading(false);
     } catch (err) {
@@ -41,7 +41,7 @@ export default function Feed() {
 
     try {
         await axios.post(
-            `https://open-hub-api-1.onrender.com/projects/request?username=${username}`,
+            `http://127.0.0.1:8000/projects/request?username=${username}`,
             { project_id: projectId },
             { headers: { 'Authorization': `Bearer ${token}` } }
         );
